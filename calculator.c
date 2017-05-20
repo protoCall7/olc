@@ -33,6 +33,12 @@ const char *const pages[PAGE__MAX] = {
 	"voltage",
 };
 
+struct parameters {
+	double resistance;
+	double current;
+	double voltage;
+};
+
 void sendhttpheaders(struct kreq *r, enum khttp code) {
 	khttp_head(r, kresps[KRESP_STATUS], "%s", khttps[code]);
 	khttp_head(r, kresps[KRESP_CONTENT_TYPE], "%s", kmimetypes[r->mime]);
@@ -43,9 +49,21 @@ void starthttp(struct kreq *r, enum khttp code) {
 	khttp_body(r);
 }
 
+void sendjson(struct kreq *r, struct parameters p) {
+	struct kjsonreq jr;
+
+	starthttp(r, KHTTP_200);
+	kjson_open(&jr, r);
+	kjson_obj_open(&jr);
+	kjson_putdoublep(&jr, "voltage", p.voltage);
+	kjson_putdoublep(&jr, "current", p.current);
+	kjson_putdoublep(&jr, "resistance", p.resistance);
+	kjson_obj_close(&jr);
+	kjson_close(&jr);
+}
+
 void processresistance(struct kreq *r) {
 	struct kpair *kpc, *kpv;
-	struct kjsonreq jr;
 	double res, cur, vol;
 
 	kpc = r->fieldmap[KEY_CURRENT];
@@ -56,23 +74,21 @@ void processresistance(struct kreq *r) {
 	} else {
 		cur = strtod(kpc->parsed.s, NULL);
 		vol = strtod(kpv->parsed.s, NULL);
-
 		res = vol / cur;
 
-		starthttp(r, KHTTP_200);
-		kjson_open(&jr, r);
-		kjson_obj_open(&jr);
-		kjson_putdoublep(&jr, "voltage", vol);
-		kjson_putdoublep(&jr, "current", cur);
-		kjson_putdoublep(&jr, "resistance", res);
-		kjson_obj_close(&jr);
-		kjson_close(&jr);
+		struct parameters p = {
+			res,
+			cur,
+			vol,
+		};
+
+		sendjson(r, p);
 	}
+
 }
 
 void processcurrent(struct kreq *r) {
 	struct kpair *kpr, *kpv;
-	struct kjsonreq jr;
 	double res, cur, vol;
 
 	kpr = r->fieldmap[KEY_RESISTANCE];
@@ -83,23 +99,20 @@ void processcurrent(struct kreq *r) {
 	} else {
 		res = strtod(kpr->parsed.s, NULL);
 		vol = strtod(kpv->parsed.s, NULL);
-
 		cur = vol / res;
 
-		starthttp(r, KHTTP_200);
-		kjson_open(&jr, r);
-		kjson_obj_open(&jr);
-		kjson_putdoublep(&jr, "voltage", vol);
-		kjson_putdoublep(&jr, "current", cur);
-		kjson_putdoublep(&jr, "resistance", res);
-		kjson_obj_close(&jr);
-		kjson_close(&jr);
+		struct parameters p = {
+			res,
+			cur,
+			vol,
+		};
+
+		sendjson(r, p);
 	}
 }
 
 void processvoltage(struct kreq *r) {
 	struct kpair *kpr, *kpc;
-	struct kjsonreq jr;
 	double res, cur, vol;
 
 	kpr = r->fieldmap[KEY_RESISTANCE];
@@ -113,14 +126,13 @@ void processvoltage(struct kreq *r) {
 
 		vol = cur * res;
 
-		starthttp(r, KHTTP_200);
-		kjson_open(&jr, r);
-		kjson_obj_open(&jr);
-		kjson_putdoublep(&jr, "voltage", vol);
-		kjson_putdoublep(&jr, "current", cur);
-		kjson_putdoublep(&jr, "resistance", res);
-		kjson_obj_close(&jr);
-		kjson_close(&jr);
+		struct parameters p = {
+			res,
+			cur,
+			vol,
+		};
+
+		sendjson(r, p);
 	}
 }
 
