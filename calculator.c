@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include <kcgi.h>
 #include <kcgijson.h>
@@ -57,7 +58,60 @@ void processresistance(struct kreq *r) {
 		vol = strtod(kpv->parsed.s, NULL);
 
 		res = vol / cur;
-		fprintf(stderr, "%lf", res);
+
+		starthttp(r, KHTTP_200);
+		kjson_open(&jr, r);
+		kjson_obj_open(&jr);
+		kjson_putdoublep(&jr, "voltage", vol);
+		kjson_putdoublep(&jr, "current", cur);
+		kjson_putdoublep(&jr, "resistance", res);
+		kjson_obj_close(&jr);
+		kjson_close(&jr);
+	}
+}
+
+void processcurrent(struct kreq *r) {
+	struct kpair *kpr, *kpv;
+	struct kjsonreq jr;
+	double res, cur, vol;
+
+	kpr = r->fieldmap[KEY_RESISTANCE];
+	kpv = r->fieldmap[KEY_VOLTAGE];
+
+	if ((kpr == NULL) || (kpv == NULL)) {
+		starthttp(r, KHTTP_400);
+	} else {
+		res = strtod(kpr->parsed.s, NULL);
+		vol = strtod(kpv->parsed.s, NULL);
+
+		cur = vol / res;
+
+		starthttp(r, KHTTP_200);
+		kjson_open(&jr, r);
+		kjson_obj_open(&jr);
+		kjson_putdoublep(&jr, "voltage", vol);
+		kjson_putdoublep(&jr, "current", cur);
+		kjson_putdoublep(&jr, "resistance", res);
+		kjson_obj_close(&jr);
+		kjson_close(&jr);
+	}
+}
+
+void processvoltage(struct kreq *r) {
+	struct kpair *kpr, *kpc;
+	struct kjsonreq jr;
+	double res, cur, vol;
+
+	kpr = r->fieldmap[KEY_RESISTANCE];
+	kpc = r->fieldmap[KEY_CURRENT];
+
+	if ((kpr == NULL) || (kpc == NULL)) {
+		starthttp(r, KHTTP_400);
+	} else {
+		res = strtod(kpr->parsed.s, NULL);
+		cur = strtod(kpc->parsed.s, NULL);
+
+		vol = cur * res;
 
 		starthttp(r, KHTTP_200);
 		kjson_open(&jr, r);
@@ -73,7 +127,6 @@ void processresistance(struct kreq *r) {
 int main(void) {
 	// defining required variables
 	struct kreq r;
-	struct kpair *p;
 	enum kcgi_err er;
 
 	er = khttp_parse(&r, keys, KEY__MAX, pages, PAGE__MAX, 0);
@@ -82,14 +135,20 @@ int main(void) {
 		fprintf(stderr, "HTTP parse error: %d\n", er);
 		return(EXIT_FAILURE);
 	}
+
+	if (pledge("stdio", NULL) == -1) {
+		return(EXIT_FAILURE);
+	}
 	
 	switch(r.page) {
 		case (PAGE_RESISTANCE):
 			processresistance(&r);
 			break;
 		case (PAGE_CURRENT):
+			processcurrent(&r);
 			break;
 		case (PAGE_VOLTAGE):
+			processvoltage(&r);
 			break;
 		default:
 			abort();
