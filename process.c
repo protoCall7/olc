@@ -6,6 +6,7 @@
 
 #include "calculator.h"
 #include "http.h"
+#include "process.h"
 #include "json.h"
 
 void process_resistance(struct kreq *r) {
@@ -28,7 +29,7 @@ void process_resistance(struct kreq *r) {
 			vol,
 		};
 
-		sendjson(r, p);
+		send_json(r, p);
 	}
 }
 
@@ -52,7 +53,7 @@ void process_current(struct kreq *r) {
 			vol,
 		};
 
-		sendjson(r, p);
+		send_json(r, p);
 	}
 }
 
@@ -77,6 +78,6 @@ void process_voltage(struct kreq *r) {
 			vol,
 		};
 
-		sendjson(r, p);
+		send_json(r, p);
 	}
 }

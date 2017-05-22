@@ -21,10 +21,5 @@ enum page {
 	PAGE__MAX
 };
 
-struct parameters {
-	double resistance;
-	double current;
-	double voltage;
-};
 
 #endif

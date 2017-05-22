@@ -5,10 +5,10 @@
 #include <kcgi.h>
 #include <kcgijson.h>
 
-#include "calculator.h"
 #include "http.h"
+#include "process.h"
 
-void sendjson(struct kreq *r, struct parameters p) {
+void send_json(struct kreq *r, struct parameters p) {
 	struct kjsonreq jr;
 
 	start_http(r, KHTTP_200);
