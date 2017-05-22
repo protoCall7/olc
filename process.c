@@ -31,7 +31,6 @@ void process_resistance(struct kreq *r) {
 		 * conditions
 		 */
 		errno = 0;
-
 		cur = strtod(kpc->parsed.s, &ep);
 		if (ep == kpc->parsed.s) {
 			start_http(r, KHTTP_400);
@@ -39,11 +38,28 @@ void process_resistance(struct kreq *r) {
 		} else if (*ep != '\0') {
 			start_http(r, KHTTP_400);
 			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
 		}
 
+		/*
+		 * convert voltage parameter to a long and check for error
+		 * conditions
+		 */
 		errno = 0;
-
 		vol = strtod(kpv->parsed.s, &ep);
+		if (ep == kpv->parsed.s) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (*ep != '\0') {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		}
+
 		res = vol / cur;
 
 		p.resistance = res;
@@ -68,8 +84,33 @@ void process_current(struct kreq *r) {
 	if ((kpr == NULL) || (kpv == NULL)) {
 		start_http(r, KHTTP_400);
 	} else {
+		errno = 0;
 		res = strtod(kpr->parsed.s, &ep);
+
+		if (ep == kpr->parsed.s) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (*ep != '\0') {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		}
+
+		errno = 0;
 		vol = strtod(kpv->parsed.s, &ep);
+		if (ep == kpv->parsed.s) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (*ep != '\0') {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		}
+
 		cur = vol / res;
 
 		p.resistance = res;
@@ -94,8 +135,31 @@ void process_voltage(struct kreq *r) {
 	if ((kpr == NULL) || (kpc == NULL)) {
 		start_http(r, KHTTP_400);
 	} else {
+		errno = 0;
 		res = strtod(kpr->parsed.s, &ep);
+		if (ep == kpr->parsed.s) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (*ep != '\0') {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		}
+
+		errno = 0;
 		cur = strtod(kpc->parsed.s, &ep);
+		if (ep == kpc->parsed.s) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (*ep != '\0') {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		} else if (errno == ERANGE) {
+			start_http(r, KHTTP_400);
+			exit(EXIT_FAILURE);
+		}
 
 		vol = cur * res;
 
