@@ -1,0 +1,152 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "olc",
+    "description": "Ohm's Law Calculator",
+    "contact": {
+      "name": "Peter H. Ezetta",
+      "url": "https://www.github.com/protoCall7/olc",
+      "email": "protocall7@gmail.com"
+    },
+    "license": {
+      "name": "3-Clause BSD License",
+      "url": "https://opensource.org/licenses/BSD-3-Clause"
+    },
+    "version": "0.1"
+  },
+  "host": "localhost",
+  "basePath": "/cgi-bin/olc",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/resistance": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "resistance is calculated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resistance": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "current": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "voltage": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/currentParam"
+        },
+        {
+          "$ref": "#/parameters/voltageParam"
+        }
+      ]
+    },
+    "/current": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "current is calculated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resistance": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "current": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "voltage": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/resistanceParam"
+        },
+        {
+          "$ref": "#/parameters/voltageParam"
+        }
+      ]
+    },
+    "/voltage": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "voltage is calculated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resistance": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "current": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "voltage": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/resistanceParam"
+        },
+        {
+          "$ref": "#/parameters/currentParam"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "resistanceParam": {
+      "name": "resistance",
+      "in": "query",
+      "description": "resistance",
+      "required": true,
+      "type": "number",
+      "format": "double"
+    },
+    "currentParam": {
+      "name": "current",
+      "in": "query",
+      "description": "current",
+      "required": true,
+      "type": "number",
+      "format": "double"
+    },
+    "voltageParam": {
+      "name": "voltage",
+      "in": "query",
+      "description": "voltage",
+      "required": true,
+      "type": "number",
+      "format": "double"
+    }
+  }
+}
