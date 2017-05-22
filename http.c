@@ -9,6 +9,7 @@ void send_http_headers(struct kreq *r, enum khttp code) {
 	khttp_head(r, kresps[KRESP_CONTENT_TYPE], "%s", kmimetypes[r->mime]);
 	khttp_head(r, "X-Frame-Options", "DENY");
 	khttp_head(r, "X-XSS-Protection", "1");
+	khttp_head(r, "X-Content-Type-Options", "nosniff");
 }
 
 void start_http(struct kreq *r, enum khttp code) {
