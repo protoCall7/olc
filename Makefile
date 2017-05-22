@@ -24,7 +24,7 @@ depend:
 	$(CC) -E -MM *.c > .depend
 
 splint:
-	splint -weak +unixlib *.c
+	splint +unixlib -compdef -uniondef *.c
 
 install: olc
 	install -o www -g www -m 0500 olc $(CGIBIN)
