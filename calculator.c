@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <kcgi.h>
 
@@ -34,9 +35,13 @@ int main(void) {
 		return(EXIT_FAILURE);
 	}
 
+#ifdef __OpenBSD__
+	errno = 0;
 	if (pledge("stdio", NULL) == -1) {
+		perror("Failed to pledge");
 		return(EXIT_FAILURE);
 	}
+#endif
 	
 	switch(r.page) {
 		case (PAGE_RESISTANCE):
