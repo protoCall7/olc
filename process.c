@@ -15,8 +15,6 @@ void process_resistance(struct kreq *r) {
 	double res, cur, vol;
 	char *ep; // strtod end pointer
 
-	errno = 0;
-
 	/*
 	 * assign current and voltage query parameter values
 	 * to kpc and kpv pairs
@@ -31,14 +29,18 @@ void process_resistance(struct kreq *r) {
 		 * convert current parameter to a long and check for error
 		 * conditions
 		 */
+		errno = 0;
+
 		cur = strtod(kpc->parsed.s, &ep);
-		if (&ep == kpc->parsed.s) {
+		if (ep == kpc->parsed.s) {
 			start_http(r, KHTTP_400);
 			return(EXIT_FAILURE);
 		} else if (*ep != '\0') {
 			start_http(r, KHTTP_400);
 			return(EXIT_FAILURE);
 		}
+
+		errno = 0;
 
 		vol = strtod(kpv->parsed.s, &ep);
 		res = vol / cur;
