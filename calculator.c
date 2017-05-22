@@ -54,7 +54,8 @@ int main(void) {
 			process_voltage(&r);
 			break;
 		default:
-			abort();
+			start_http(&r, KHTTP_404);
+			break;
 	}
 
 	khttp_free(&r);
