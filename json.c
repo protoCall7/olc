@@ -13,10 +13,16 @@ void send_json(struct kreq *r, struct parameters p) {
 
 	start_http(r, KHTTP_200);
 	kjson_open(&jr, r);
-	kjson_obj_open(&jr);
-	kjson_putdoublep(&jr, "voltage", p.voltage);
-	kjson_putdoublep(&jr, "current", p.current);
-	kjson_putdoublep(&jr, "resistance", p.resistance);
-	kjson_obj_close(&jr);
-	kjson_close(&jr);
+	if(kjson_obj_open(&jr) == 0)
+		abort();
+	if(kjson_putdoublep(&jr, "voltage", p.voltage) == 0)
+		abort();
+	if(kjson_putdoublep(&jr, "current", p.current) == 0)
+		abort();
+	if(kjson_putdoublep(&jr, "resistance", p.resistance) == 0)
+		abort();
+	if(kjson_obj_close(&jr) == 0)
+		abort();
+	if(kjson_close(&jr) == 0)
+		abort();
 }

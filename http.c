@@ -4,7 +4,7 @@
 
 #include <kcgi.h>
 
-void send_http_headers(struct kreq *r, enum khttp code) {
+static void send_http_headers(struct kreq *r, enum khttp code) {
 	khttp_head(r, kresps[KRESP_STATUS], "%s", khttps[code]);
 	khttp_head(r, kresps[KRESP_CONTENT_TYPE], "%s", kmimetypes[r->mime]);
 	khttp_head(r, "X-Frame-Options", "DENY");
@@ -14,5 +14,5 @@ void send_http_headers(struct kreq *r, enum khttp code) {
 
 void start_http(struct kreq *r, enum khttp code) {
 	send_http_headers(r, code);
-	khttp_body(r);
+	(void) khttp_body(r);
 }

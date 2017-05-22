@@ -8,11 +8,6 @@ enum key {
 	KEY__MAX
 };
 
-static const struct kvalid keys[KEY__MAX] = {
-	{ kvalid_string, "resistance" },
-	{ kvalid_string, "current" },
-	{ kvalid_string, "voltage" },
-};
 
 enum page {
 	PAGE_RESISTANCE,
@@ -20,6 +15,5 @@ enum page {
 	PAGE_VOLTAGE,
 	PAGE__MAX
 };
-
 
 #endif

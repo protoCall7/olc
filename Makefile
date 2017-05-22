@@ -23,6 +23,9 @@ process.o: process.c calculator.h http.h process.h json.h
 depend:
 	$(CC) -E -MM *.c > .depend
 
+splint:
+	splint -weak +unixlib *.c
+
 install: olc
 	install -o www -g www -m 0500 olc $(CGIBIN)
 	install -o www -g www -m 0440 htdocs/robots.txt $(HTDOCS)

@@ -12,6 +12,7 @@
 
 void process_resistance(struct kreq *r) {
 	struct kpair *kpc, *kpv;
+	struct parameters p;
 	double res, cur, vol;
 	char *ep; // strtod end pointer
 
@@ -34,10 +35,10 @@ void process_resistance(struct kreq *r) {
 		cur = strtod(kpc->parsed.s, &ep);
 		if (ep == kpc->parsed.s) {
 			start_http(r, KHTTP_400);
-			return(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		} else if (*ep != '\0') {
 			start_http(r, KHTTP_400);
-			return(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 
 		errno = 0;
@@ -45,11 +46,9 @@ void process_resistance(struct kreq *r) {
 		vol = strtod(kpv->parsed.s, &ep);
 		res = vol / cur;
 
-		struct parameters p = {
-			res,
-			cur,
-			vol,
-		};
+		p.resistance = res;
+		p.current = cur;
+		p.voltage = vol;
 
 		send_json(r, p);
 	}
@@ -57,6 +56,7 @@ void process_resistance(struct kreq *r) {
 
 void process_current(struct kreq *r) {
 	struct kpair *kpr, *kpv;
+	struct parameters p;
 	double res, cur, vol;
 	char *ep;
 
@@ -72,11 +72,9 @@ void process_current(struct kreq *r) {
 		vol = strtod(kpv->parsed.s, &ep);
 		cur = vol / res;
 
-		struct parameters p = {
-			res,
-			cur,
-			vol,
-		};
+		p.resistance = res;
+		p.current = cur;
+		p.voltage = vol;
 
 		send_json(r, p);
 	}
@@ -84,6 +82,7 @@ void process_current(struct kreq *r) {
 
 void process_voltage(struct kreq *r) {
 	struct kpair *kpr, *kpc;
+	struct parameters p;
 	double res, cur, vol;
 	char *ep;
 
@@ -100,11 +99,9 @@ void process_voltage(struct kreq *r) {
 
 		vol = cur * res;
 
-		struct parameters p = {
-			res,
-			cur,
-			vol,
-		};
+		p.resistance = res;
+		p.current = cur;
+		p.voltage = vol;
 
 		send_json(r, p);
 	}

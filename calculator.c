@@ -14,6 +14,13 @@
 int main(void) {
 	struct kreq r;
 	enum kcgi_err er;
+	
+	static const struct kvalid keys[KEY__MAX] = {
+		{ kvalid_string, "resistance" },
+		{ kvalid_string, "current" },
+		{ kvalid_string, "voltage" },
+	};
+
 	const char *const pages[PAGE__MAX] = {
 		"resistance",
 		"current",
