@@ -22,7 +22,7 @@ int main(void) {
 		{ kvalid_string, "voltage" },
 	};
 
-	const char *const pages[PAGE__MAX] = {
+	static const char *const pages[PAGE__MAX] = {
 		"resistance",
 		"current",
 		"voltage",
