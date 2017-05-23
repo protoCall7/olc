@@ -1,0 +1,117 @@
+<html>
+	<body>
+		<label>Current:
+			<input type="text" id="currentTextBox" />
+		</label>
+		<br />
+		<label>Voltage:
+			<input type="text" id="voltageTextBox" />
+		</label>
+		<br />
+		<label>Resistance:
+			<input type="text" id="resistanceTextBox" />
+		</label>
+		<br />
+		<button id="calculateResistance" type="button">
+			Calculate Resistance
+		</button>
+		<button id="calculateVoltage" type="button">
+			Calculate Voltage
+		</button>
+		<button id="calculateCurrent" type="button">
+			Calculate Current
+		</button>
+	<script>
+	(function() {
+		var httpRequest;
+		document.getElementById("calculateResistance").onclick = function() {
+			var current = document.getElementById("currentTextBox").value;
+			var voltage = document.getElementById("voltageTextBox").value;
+			makeResistanceRequest("/cgi-bin/olc/resistance.json", current, voltage);
+		}
+
+		function makeResistanceRequest(url, current, voltage) {
+			httpRequest = new XMLHttpRequest();
+
+			if (!httpRequest) {
+				alert("Can't creat XMLHTTP instance");
+				return false;
+			}
+			httpRequest.onreadystatechange = alertResistance;
+			httpRequest.open('GET', url + '?current=' + encodeURIComponent(current) + '&voltage=' + encodeURIComponent(voltage));
+			httpRequest.send();
+		}
+
+		function alertResistance() {
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					var response = JSON.parse(httpRequest.responseText);
+					alert('Resistance: ' + response.resistance);
+				} else {
+					alert('There was a problem.');
+				}
+			}
+		}
+
+		document.getElementById("calculateVoltage").onclick = function() {
+			var current = document.getElementById("currentTextBox").value;
+			var resistance = document.getElementById("resistanceTextBox").value;
+			makeVoltageRequest("/cgi-bin/olc/voltage.json", current, resistance);
+		}
+
+		function makeVoltageRequest(url, current, resistance) {
+			httpRequest = new XMLHttpRequest();
+
+			if (!httpRequest) {
+				alert("Can't creat XMLHTTP instance");
+				return false;
+			}
+			httpRequest.onreadystatechange = alertVoltage;
+			httpRequest.open('GET', url + '?current=' + encodeURIComponent(current) + '&resistance=' + encodeURIComponent(resistance));
+			httpRequest.send();
+		}
+
+		function alertVoltage() {
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					var response = JSON.parse(httpRequest.responseText);
+					alert('Voltage: ' + response.voltage);
+				} else {
+					alert('There was a problem.');
+				}
+			}
+		}
+
+		document.getElementById("calculateCurrent").onclick = function() {
+			var voltage = document.getElementById("voltageTextBox").value;
+			var resistance = document.getElementById("resistanceTextBox").value;
+			makeCurrentRequest("/cgi-bin/olc/current.json", voltage, resistance);
+		}
+
+		function makeCurrentRequest(url, voltage, resistance) {
+			httpRequest = new XMLHttpRequest();
+
+			if (!httpRequest) {
+				alert("Can't creat XMLHTTP instance");
+				return false;
+			}
+			httpRequest.onreadystatechange = alertCurrent;
+			httpRequest.open('GET', url + '?voltage=' + encodeURIComponent(voltage) + '&resistance=' + encodeURIComponent(resistance));
+			httpRequest.send();
+		}
+
+		function alertCurrent() {
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					var response = JSON.parse(httpRequest.responseText);
+					alert('Current: ' + response.current);
+				} else {
+					alert('There was a problem.');
+				}
+			}
+		}
+	})();
+	</script>
+	</body>
+</html>
+
