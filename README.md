@@ -6,7 +6,7 @@
 * Error pages
 
 ## Server Setup:
-OLC has been tested running under OpenBSD httpd[1] on OpenBSD 6.1[2]. It is intended to run under slowcgi(8)
+OLC has been tested running under OpenBSD httpd on OpenBSD 6.1. It is intended to run under slowcgi(8)
 
 ### Sample /etc/httpd.conf
 ```
@@ -22,11 +22,11 @@ server "default" {
 
 ### Sample configuration (assumes httpd.conf is already in place)
 ```bash
+$ cd olc
+$ make
+$ doas make install
 $ doas rcctl enable httpd
 $ doas rcctl enable slowcgi
 $ doas rcctl start httpd
 $ doas rcctl start slowcgi
 ```
-
-[1]: https://bsd.plumbing/
-[2]: https://www.openbsd.org/
