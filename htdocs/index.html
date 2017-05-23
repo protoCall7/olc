@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
 <html>
 	<body>
 		<label>Current:
@@ -30,6 +33,18 @@
 			makeResistanceRequest("/cgi-bin/olc/resistance.json", current, voltage);
 		}
 
+		document.getElementById("calculateVoltage").onclick = function() {
+			var current = document.getElementById("currentTextBox").value;
+			var resistance = document.getElementById("resistanceTextBox").value;
+			makeVoltageRequest("/cgi-bin/olc/voltage.json", current, resistance);
+		}
+
+		document.getElementById("calculateCurrent").onclick = function() {
+			var voltage = document.getElementById("voltageTextBox").value;
+			var resistance = document.getElementById("resistanceTextBox").value;
+			makeCurrentRequest("/cgi-bin/olc/current.json", voltage, resistance);
+		}
+
 		function makeResistanceRequest(url, current, voltage) {
 			httpRequest = new XMLHttpRequest();
 
@@ -53,12 +68,6 @@
 			}
 		}
 
-		document.getElementById("calculateVoltage").onclick = function() {
-			var current = document.getElementById("currentTextBox").value;
-			var resistance = document.getElementById("resistanceTextBox").value;
-			makeVoltageRequest("/cgi-bin/olc/voltage.json", current, resistance);
-		}
-
 		function makeVoltageRequest(url, current, resistance) {
 			httpRequest = new XMLHttpRequest();
 
@@ -80,12 +89,6 @@
 					alert('There was a problem.');
 				}
 			}
-		}
-
-		document.getElementById("calculateCurrent").onclick = function() {
-			var voltage = document.getElementById("voltageTextBox").value;
-			var resistance = document.getElementById("resistanceTextBox").value;
-			makeCurrentRequest("/cgi-bin/olc/current.json", voltage, resistance);
 		}
 
 		function makeCurrentRequest(url, voltage, resistance) {
@@ -114,4 +117,3 @@
 	</script>
 	</body>
 </html>
-
