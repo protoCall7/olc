@@ -20,7 +20,7 @@
     "http"
   ],
   "paths": {
-    "/resistance": {
+    "/resistance.json": {
       "get": {
         "responses": {
           "200": {
@@ -54,7 +54,7 @@
         }
       ]
     },
-    "/current": {
+    "/current.json": {
       "get": {
         "responses": {
           "200": {
@@ -88,7 +88,7 @@
         }
       ]
     },
-    "/voltage": {
+    "/voltage.json": {
       "get": {
         "responses": {
           "200": {

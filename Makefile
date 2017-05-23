@@ -26,10 +26,9 @@ depend:
 splint:
 	splint +unixlib -compdef -uniondef *.c
 
-install: olc
+install: olc 
 	install -o www -g www -m 0500 olc $(CGIBIN)
-	install -o www -g www -m 0440 htdocs/robots.txt $(HTDOCS)
-	install -o www -g www -m 0440 htdocs/sitemap.xml $(HTDOCS)
+	install -o www -g www -m 0440 htdocs/* $(HTDOCS)
 
 clean:
 	rm -rf *.o *.core olc
